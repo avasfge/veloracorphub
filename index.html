@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Reports</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Навигационное меню -->
+  <nav class="navbar">
+    <button class="nav-btn" onclick="showSection('reports')">Общие отчеты</button>
+    <button class="nav-btn" onclick="showSection('departments')">Разделы по отделам</button>
+  </nav>
+
+  <!-- Разделы сайта -->
+  <main>
+    <section id="reports" class="content-section">
+      <h1>Общие отчеты</h1>
+      <ul id="reports-list"></ul>
+    </section>
+
+    <section id="departments" class="content-section hidden">
+      <h1>Разделы по отделам</h1>
+      <ul>
+        <li>Финансовый отдел</li>
+        <li>HR отдел</li>
+        <li>Маркетинг</li>
+        <li>Продажи</li>
+        <li>IT</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
