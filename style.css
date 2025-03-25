@@ -1,0 +1,45 @@
+/* Сброс стилей для базовой структуры */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+.navbar {
+  background-color: #007bff;
+  padding: 10px;
+  text-align: center;
+}
+
+.nav-btn {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background-color: #003f7f;
+}
+
+.content-section {
+  background-color: white;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Скрытый класс для переключения разделов */
+.hidden {
+  display: none;
+}
