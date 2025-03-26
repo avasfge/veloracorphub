@@ -1,38 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Company Reports</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет по кандидатам</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto space-y-8">
+        <h1 class="text-3xl font-bold text-gray-800">Отчет по кандидатам</h1>
 
-  <!-- Навигационное меню -->
-  <nav class="navbar">
-    <button class="nav-btn" onclick="showSection('reports')">Общие отчеты</button>
-    <button class="nav-btn" onclick="showSection('departments')">Разделы по отделам</button>
-  </nav>
+        <!-- Отчетные данные -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 110-4 2 2 0 010 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.523 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S1.732 14.057.458 10zm10 0a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+                    <p class="ml-3 text-lg font-semibold">Всего подано</p>
+                </div>
+                <p class="text-2xl font-bold">23</p>
+            </div>
 
-  <!-- Разделы сайта -->
-  <main>
-    <section id="reports" class="content-section">
-      <h1>Общие отчеты</h1>
-      <ul id="reports-list"></ul>
-    </section>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/></svg>
+                    <p class="ml-3 text-lg font-semibold">Утверждено</p>
+                </div>
+                <p class="text-2xl font-bold">10</p>
+            </div>
 
-    <section id="departments" class="content-section hidden">
-      <h1>Разделы по отделам</h1>
-      <ul>
-        <li>Финансовый отдел</li>
-        <li>HR отдел</li>
-        <li>Маркетинг</li>
-        <li>Продажи</li>
-        <li>IT</li>
-      </ul>
-    </section>
-  </main>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-5a1 1 0 112 0v2a1 1 0 11-2 0v-2zm1-8a1 1 0 000 2h.01a1 1 0 000-2H10z" clip-rule="evenodd"/></svg>
+                    <p class="ml-3 text-lg font-semibold">Отклонено</p>
+                </div>
+                <p class="text-2xl font-bold">5</p>
+            </div>
+        </div>
 
-  <script src="script.js"></script>
+        <!-- График -->
+        <div class="bg-white shadow-lg p-6 rounded-2xl">
+            <h2 class="text-xl font-semibold mb-4">График статусов кандидатов</h2>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <!-- Таблица кандидатов -->
+        <div class="bg-white shadow-lg rounded-lg">
+            <table class="min-w-full table-auto border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-200 text-left">
+                        <th class="p-4 border border-gray-300">ФИО</th>
+                        <th class="p-4 border border-gray-300">Вакансия</th>
+                        <th class="p-4 border border-gray-300">Дата подачи</th>
+                        <th class="p-4 border border-gray-300">Ответственный</th>
+                        <th class="p-4 border border-gray-300">Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-gray-200">
+                        <td class="p-4">Иван Иванов</td>
+                        <td class="p-4">HR-менеджер</td>
+                        <td class="p-4">2025-03-24</td>
+                        <td class="p-4">Анна Петрова</td>
+                        <td class="p-4"><span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-lg">На рассмотрении</span></td>
+                    </tr>
+                    <tr class="border-b border-gray-200">
+                        <td class="p-4">Мария Смирнова</td>
+                        <td class="p-4">Рекрутер</td>
+                        <td class="p-4">2025-03-25</td>
+                        <td class="p-4">Дмитрий Иванов</td>
+                        <td class="p-4"><span class="bg-green-100 text-green-800 py-1 px-2 rounded-lg">Утверждён</span></td>
+                    </tr>
+                    <tr>
+                        <td class="p-4">Алексей Ковалев</td>
+                        <td class="p-4">Оператор чата</td>
+                        <td class="p-4">2025-03-26</td>
+                        <td class="p-4">Анна Петрова</td>
+                        <td class="p-4"><span class="bg-red-100 text-red-800 py-1 px-2 rounded-lg">Отклонён</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Утверждено', 'Отклонено', 'На рассмотрении'],
+                datasets: [{
+                    data: [10, 5, 8],
+                    backgroundColor: ['#34d399', '#f87171', '#60a5fa']
+                }]
+            }
+        });
+    </script>
 </body>
 </html>
