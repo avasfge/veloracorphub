@@ -2,149 +2,150 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>CTOS Dashboard</title>
+  <title>NexaOS Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
+    :root {
+      --bg: #111;
+      --text: #eee;
+      --accent: #3b82f6;
+    }
+    [data-theme="light"] {
+      --bg: #f3f4f6;
+      --text: #111;
+      --accent: #2563eb;
+    }
+    [data-theme="amoled"] {
+      --bg: #000;
+      --text: #fff;
+      --accent: #0ff;
+    }
     body {
-      background: radial-gradient(#000, #0a0a0a);
-      color: #0ff;
-      font-family: 'Courier New', monospace;
-      overflow: hidden;
+      margin: 0;
+      font-family: sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1rem;
     }
-
-    .glitch {
-      color: #0ff;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-      animation: glitch 2s infinite;
+    h1, h2 {
+      color: var(--accent);
     }
-
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px #0ff; }
-      20% { text-shadow: -2px -2px #0ff; }
-      40% { text-shadow: 1px -1px #0ff; }
-      60% { text-shadow: -1px 1px #0ff; }
-      80% { text-shadow: 2px 2px #0ff; }
-      100% { text-shadow: 0px 0px #0ff; }
+    .grid {
+      display: grid;
+      gap: 1rem;
     }
-
-    canvas#bg {
-      position: fixed;
-      top: 0; left: 0;
+    .grid-cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--accent);
+    }
+    textarea {
       width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.2;
-    }
-
-    .terminal {
-      background-color: rgba(0, 255, 255, 0.05);
-      border: 1px solid #0ff3;
-      padding: 1em;
-      font-size: 14px;
-      height: 200px;
-      overflow-y: auto;
-    }
-
-    .input {
       background: transparent;
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+    button, select {
+      background: var(--accent);
+      color: white;
       border: none;
-      outline: none;
-      color: #0ff;
-      width: 100%;
+      padding: 0.5rem 1rem;
+      margin: 0.25rem 0;
+      border-radius: 0.5rem;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="p-4">
-  <canvas id="bg"></canvas>
-
-  <h1 class="text-3xl glitch text-center mb-4">CTOS Home Interface</h1>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Терминал -->
+<body data-theme="dark">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>NexaOS Home</h1>
     <div>
-      <div class="terminal" id="terminal">
-        <div>>> Добро пожаловать в систему CTOS</div>
-      </div>
-      <input class="input mt-2" id="command" placeholder="Введите команду..." autofocus>
+      <label for="theme">Тема:</label>
+      <select id="theme">
+        <option value="dark">Тёмная</option>
+        <option value="light">Светлая</option>
+        <option value="amoled">AMOLED</option>
+        <option value="system">Системная</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="time" style="margin-top: .5rem; color: gray;"></div>
+  <div class="grid grid-cols-2">
+    <div class="card">
+      <h2>🌐 Погода</h2>
+      <div id="weather">Загрузка...</div>
     </div>
 
-    <!-- Виджеты -->
-    <div>
-      <div class="bg-black bg-opacity-30 p-4 rounded-lg border border-cyan-500">
-        <h2 class="text-xl mb-2">📅 Системное время</h2>
-        <div id="time" class="text-2xl font-bold"></div>
+    <div class="card">
+      <h2>💬 Telegram</h2>
+      <div id="telegram">
+        <div><b>@user123:</b> Привет, как дела?</div>
+        <div><b>@botnews:</b> Обновление системы NexaOS доступно.</div>
       </div>
+    </div>
 
-      <div class="bg-black bg-opacity-30 p-4 rounded-lg border border-cyan-500 mt-4">
-        <h2 class="text-xl mb-2">📝 Заметки</h2>
-        <textarea id="notes" class="w-full h-24 p-2 bg-black text-cyan-300"></textarea>
-      </div>
+    <div class="card">
+      <h2>📅 Заметки</h2>
+      <textarea id="notes" rows="6" placeholder="Пиши сюда..."></textarea>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Система</h2>
+      <div>Uptime: <span id="uptime">~</span></div>
+      <div>CPU: <span id="cpu">~%</span></div>
+      <div>RAM: <span id="ram">~%</span></div>
+      <button onclick="alert('Запуск Firefox...')">🔌 Firefox</button>
     </div>
   </div>
 
   <script>
-    const terminal = document.getElementById('terminal');
-    const command = document.getElementById('command');
-    const notes = document.getElementById('notes');
-    const time = document.getElementById('time');
+    // Время
+    function updateTime() {
+      const now = new Date();
+      document.getElementById("time").textContent = now.toLocaleString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
-    // Terminal interaction
-    command.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        const input = command.value;
-        terminal.innerHTML += `<div>> ${input}</div>`;
-        if (input === 'help') {
-          terminal.innerHTML += `<div>Доступные команды: help, date, clear</div>`;
-        } else if (input === 'date') {
-          terminal.innerHTML += `<div>${new Date().toString()}</div>`;
-        } else if (input === 'clear') {
-          terminal.innerHTML = '';
-        } else {
-          terminal.innerHTML += `<div>Неизвестная команда</div>`;
-        }
-        terminal.scrollTop = terminal.scrollHeight;
-        command.value = '';
+    // Темы
+    const themeSelect = document.getElementById('theme');
+    const userTheme = localStorage.getItem('theme');
+    if (userTheme && userTheme !== 'system') {
+      document.body.setAttribute('data-theme', userTheme);
+      themeSelect.value = userTheme;
+    }
+    themeSelect.addEventListener('change', () => {
+      const theme = themeSelect.value;
+      if (theme === 'system') {
+        document.body.removeAttribute('data-theme');
+      } else {
+        document.body.setAttribute('data-theme', theme);
       }
+      localStorage.setItem('theme', theme);
     });
 
-    // Time update
-    setInterval(() => {
-      const now = new Date();
-      time.textContent = now.toLocaleTimeString() + ' | ' + now.toLocaleDateString();
-    }, 1000);
-
-    // Notes storage
+    // Заметки
+    const notes = document.getElementById('notes');
     notes.value = localStorage.getItem('notes') || '';
     notes.addEventListener('input', () => {
       localStorage.setItem('notes', notes.value);
     });
 
-    // Background animation (lines)
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
+    // Погода (мок)
+    const weatherDiv = document.getElementById('weather');
+    weatherDiv.innerHTML = `🌧️ Kyiv, 26°C, Облачно`;
 
-    let offset = 0;
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = "#0ff2";
-      ctx.lineWidth = 0.5;
-      for (let y = 0; y < canvas.height; y += 40) {
-        ctx.beginPath();
-        ctx.moveTo(0, y + offset);
-        ctx.lineTo(canvas.width, y + offset);
-        ctx.stroke();
-      }
-      offset = (offset + 0.5) % 40;
-      requestAnimationFrame(draw);
-    }
-    draw();
+    // Uptime/CPU/RAM (мок)
+    document.getElementById('uptime').textContent = '2h 41m';
+    document.getElementById('cpu').textContent = '15%';
+    document.getElementById('ram').textContent = '43%';
   </script>
 </body>
 </html>
