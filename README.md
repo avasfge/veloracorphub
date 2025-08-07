@@ -1,3 +1,4 @@
+![Логотип HoneyOp](https://github.com/avasfge/HoneyOp/raw/main/logo.png)
 # HoneyOp — уют через переписку
 
 Проект HoneyOp — это простой, лёгкий и современный веб-интерфейс для комфортного общения через Telegram.  
